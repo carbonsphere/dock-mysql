@@ -1,7 +1,6 @@
 Author  : CarbonSphere <br>
 Email   : carbonsphere@gmail.com<br>
 
-
 <h2>Dockerfile for building MySQL Application. This Base image uses CentOS6</h2>
 
 <h3> This image provides a MySQL DB Application on port 3306 and a default user is created at build time. Application attributes are moved into environment variable for others to link and interact with this DB application. Additional shell script included in image to aid user creation.</h3>
