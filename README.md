@@ -18,24 +18,24 @@ git clone https://github.com/carbonsphere/dock-mysql.git
 <pre>
 <b>Command: </b>
 #Change Directory
-cd Docker-Mysql-PHPMyAdmin
+cd dock-mysql
 
 #Build Image
 sudo docker build -t #YOUR_IMAGE_NAME# .
-#ex:  sudo docker build -t youraccount/docker-mysql-phpmyadmin .
+#ex:  sudo docker build -t youraccount/dock-mysql .
 </pre>
 
 <b>3 :</b> Run image
 <pre>
 <b>Command: </b>
-sudo docker run -d -P youraccount/docker-mysql-phpmyadmin 
+sudo docker run -d -P youraccount/dock-mysql
 
 </pre>
 
 <b>4 :</b> Run image
 <pre>
 <b>Command: </b>
-sudo docker run -d -P --name db youraccount/docker-mysql-phpmyadmin 
+sudo docker run -d -P --name db youraccount/dock-mysql 
 
 #docker_daemon_ip#:#image_port#
 docker_daemon_ip can be found using "boot2docker ip" or you can check your environment variable "echo $DOCKER_HOST"
