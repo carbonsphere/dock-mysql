@@ -3,6 +3,7 @@
 # Pure MySQL DB Application with default user
 # Set application attribue with environment variable
 ############################################################
+
 FROM centos:centos6
 
 MAINTAINER CarbonSphere <CarbonSphere@gmail.com>
