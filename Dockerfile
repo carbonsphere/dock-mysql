@@ -1,28 +1,38 @@
 ############################################################
 # Dockerfile: CentOS6/MySQL
 # Pure MySQL DB Application with default user
-# Set application attribue with environment variable
 ############################################################
 
 FROM centos:centos6
 
 MAINTAINER CarbonSphere <CarbonSphere@gmail.com>
 
+ENV HOME 						/root
+ENV TERM 						xterm
+
+# Install MySQL
+RUN yum -y install mysql-server mysql-client; \
+	yum -y clean all;
+
 # Add Environment Variables
 ENV MYSQL_USER				carbon
 ENV MYSQL_PASS 				carbon
 ENV MYSQL_ROOT_PASSWORD 	carbon
 ENV MYSQL_PORT				3306
+ENV MYSQL_ID				1
+ENV MYSQL_SLAVE_USER		carbonSlave
+ENV MYSQL_SLAVE_PASS		DEFAULT
+ENV MYSQL_MASTER_HOST		DEFAULT
+ENV MYSQL_MASTER_USER		carbonSlave
+ENV MYSQL_MASTER_PASS		DEFAULT
 
 # Add create user & db script to root
-ADD createUserDb.sh /
+ADD createUserDb.sh /usr/local/bin/createUserDb.sh
+ADD start.sh /usr/local/bin/start.sh
 
 # Install MySQL
-RUN yum -y install mysql-server mysql-client && \
-	yum -y clean all && \
-	chmod +x /createUserDb.sh && \
-	# Modify my.cfg
-	echo -e "\nsocket=/var/lib/mysql/mysql.sock" >> /etc/my.cfg
+RUN echo -e "\nsocket=/var/lib/mysql/mysql.sock" >> /etc/my.cfg; \
+	/bin/sed -i "s/\[mysqld\]/\[mysqld\]\nbind-address = 0.0.0.0\nserver-id = 1\nlog-bin = mysql-bin\nbinlog-ignore-db=\"mysql\"\n#master-host\n#master-user\n#master-password\n#master-connect-retry\n/" /etc/my.cnf
 
 # MySQL : $MYSQL_PORT
 EXPOSE $MYSQL_PORT
@@ -36,6 +46,10 @@ RUN service mysqld start && \
 		REVOKE ALL PRIVILEGES,GRANT OPTION from ${MYSQL_USER}; \
 		GRANT USAGE ON *.* to '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASS}'; \
 		GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION; \
-		FLUSH PRIVILEGES;"
+		DROP USER ''@'localhost'; \
+		DROP USER ''@'$(hostname)'; \
+		DROP DATABASE test; \
+		FLUSH PRIVILEGES; \
+		reset master;"
 
-CMD ["/usr/bin/mysqld_safe"]
+CMD ["start.sh"]
