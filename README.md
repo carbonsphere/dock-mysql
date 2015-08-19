@@ -1,5 +1,5 @@
-Author  : CarbonSphere <br>
-Email   : carbonsphere@gmail.com<br>
+Author  : CarbonSphere
+Email   : carbonsphere@gmail.com
 
 ## Dockerfile for building MySQL Application. This Base image uses CentOS6
 
@@ -7,21 +7,22 @@ Email   : carbonsphere@gmail.com<br>
 
 #### Steps for creating image from Dockerfile and running procedure:
 
-**1 :** Clone dock-mysql.git
+**1 :** Clone carbonsphere/dock-mysql.git
 
 > git clone https://github.com/carbonsphere/dock-mysql.git
 
 
 **2 :** Build docker image from Dockerfile
-Change Directory
 
-> cd dock-mysql
+- Change Directory
 
-	- Build Image
+	> cd dock-mysql
 
-> sudo docker build -t #YOUR_IMAGE_NAME# .
+- Build Image
 
-	- ex:  sudo docker build -t youraccount/dock-mysql .
+	> sudo docker build -t #YOUR_IMAGE_NAME# .
+
+- ex:  sudo docker build -t youraccount/dock-mysql .
 
 
 **3 :** Run image
@@ -31,7 +32,7 @@ Change Directory
 
 **4 :** Run image
 
-> sudo docker run -d -P --name db youraccount/dock-mysql 
+	> sudo docker run -d -P --name db youraccount/dock-mysql 
 
 - docker_daemon_ip#:#image_port#
 
@@ -39,21 +40,19 @@ docker_daemon_ip can be found using "boot2docker ip" or you can check your envir
 image_port can be found using "docker port db"
 
 # Updates
---------
-This is an automatic MySQL replication container. It automatically chains linked containers as you start it.
 
-For security consideration - Default remote and slave accounts will now have a randomly generated passwords. Passwords can be obtained by using "docker logs" command.
+This is an automatic MySQL replication container. It automatically chains linked containers as you start it.
 
 - Single docker host environment startup procedure.
 
 1. Start first MySQL container and name it "mysql".
 
-> docker run -d --name mysql -p 3306:3306 carbonsphere/dock-mysql
+	> docker run -d --name mysql -p 3306:3306 carbonsphere/dock-mysql
 
 
 2. Obtain remote & slave keys in logs
 
-> docker logs mysql
+	> docker logs mysql
 
 
 	Log Example:
@@ -67,7 +66,7 @@ For security consideration - Default remote and slave accounts will now have a r
 
 3. Start second MySQL Container and create link to first container
 
-> docker run -d --name mysql2 -p 3307:3306 -e MYSQL_ID=2 -e MYSQL_MASTER_HOST="db" -e MYSQL_MASTER_PASS="bbbbbbbb8da6092db237" --link mysql:db carbonsphere/dock-mysql
+	> docker run -d --name mysql2 -p 3307:3306 -e MYSQL_ID=2 -e MYSQL_MASTER_HOST="db" -e MYSQL_MASTER_PASS="bbbbbbbb8da6092db237" --link mysql:db carbonsphere/dock-mysql
 
 ```
 	Required Environment variables:
@@ -82,7 +81,7 @@ For security consideration - Default remote and slave accounts will now have a r
 
 4. Check slave server (mysql2) status.
 
-> mysql>  show slave status;
+	> mysql>  show slave status;
 
 
 	If no error is present, then it is synced up with first container.
@@ -99,3 +98,6 @@ For security consideration - Default remote and slave accounts will now have a r
 
 	If no errors are present, then it is setup properly.
 
+# Security
+
+For security consideration - Default remote and slave accounts will now have a randomly generated passwords. Passwords can be obtained by using "docker logs" command.
