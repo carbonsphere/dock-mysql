@@ -1,4 +1,5 @@
 Author  : CarbonSphere
+
 Email   : carbonsphere@gmail.com
 
 ## Dockerfile for building MySQL Application. This Base image uses CentOS6
@@ -9,7 +10,7 @@ Email   : carbonsphere@gmail.com
 
 **1 :** Clone carbonsphere/dock-mysql.git
 
-> git clone https://github.com/carbonsphere/dock-mysql.git
+	> git clone https://github.com/carbonsphere/dock-mysql.git
 
 
 **2 :** Build docker image from Dockerfile
@@ -27,8 +28,7 @@ Email   : carbonsphere@gmail.com
 
 **3 :** Run image
 
-> sudo docker run -d -P youraccount/dock-mysql
-
+	> sudo docker run -d -P youraccount/dock-mysql
 
 **4 :** Run image
 
@@ -54,7 +54,7 @@ This is an automatic MySQL replication container. It automatically chains linked
 
 	> docker logs mysql
 
-
+```
 	Log Example:
 	------------
 	Default password detected. Generating new slave account password
@@ -63,6 +63,7 @@ This is an automatic MySQL replication container. It automatically chains linked
 	Slave account password = bbbbbbbb8da6092db237
 	Starting mysqld:  [  OK  ]
 	Setting mysql slave account password
+```
 
 3. Start second MySQL Container and create link to first container
 
@@ -89,6 +90,7 @@ This is an automatic MySQL replication container. It automatically chains linked
 5. For creating round robin replication or Master-Master Replication.
 
 	Run the following mysql command on first (mysql) container.
+	
 ```
 	mysql> slave stop;
 	mysql> CHANGE MASTER TO MASTER_HOST='mysql2_ip',MASTER_USER='mysql2_slave_user',MASTER_PASSWORD='mysql2_slave_password';
@@ -100,4 +102,4 @@ This is an automatic MySQL replication container. It automatically chains linked
 
 # Security
 
-For security consideration - Default remote and slave accounts will now have a randomly generated passwords. Passwords can be obtained by using "docker logs" command.
+For security consideration - Default remote and slave accounts will now have a randomly generated passwords on container start. Passwords can be obtained by using "docker logs" command.
