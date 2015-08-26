@@ -1,10 +1,9 @@
 #!/bin/sh
 NODES=5
 
-
 INDEX=1
 AINDEX=$INDEX
-IMAGENAME='carbonsphere/dock-mysql1'
+IMAGENAME='carbonsphere/dock-mysql'
 STARTPORT=3307
 TIMEOUT=100
 
