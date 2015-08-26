@@ -103,3 +103,7 @@ This is an automatic MySQL replication container. It automatically chains linked
 # Security
 
 For security consideration - Default remote and slave accounts will now have a randomly generated passwords on container start. Passwords can be obtained by using "docker logs" command.
+
+# Test Script
+
+Added local container test script which will spawn 5 (default) mysql containers (mysql1~mysql5) and link them together to form a daisy chain. The test script will then create 1 DB in each container and display all container's database at the end. If containers are linked properly, then all 5 DB should have the same databases.

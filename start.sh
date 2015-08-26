@@ -24,6 +24,7 @@ if [ "${MYSQL_MASTER_HOST}" != "DEFAULT" ]; then
   sed -i "/master-host/c\master-host = ${MYSQL_MASTER_HOST}" /etc/my.cnf
   sed -i "/master-user/c\master-user = ${MYSQL_MASTER_USER}" /etc/my.cnf
   sed -i "/master-password/c\master-password = ${MYSQL_MASTER_PASS} " /etc/my.cnf
+  sed -i "/log-slave-updates/c\log-slave-updates = 1 " /etc/my.cnf
   sed -i "/master-connect-retry/c\master-connect-retry = 60" /etc/my.cnf
 fi
 

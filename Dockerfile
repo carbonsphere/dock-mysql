@@ -32,7 +32,7 @@ ADD start.sh /usr/local/bin/start.sh
 
 # Install MySQL
 RUN echo -e "\nsocket=/var/lib/mysql/mysql.sock" >> /etc/my.cfg; \
-	/bin/sed -i "s/\[mysqld\]/\[mysqld\]\nbind-address = 0.0.0.0\nserver-id = 1\nlog-bin = mysql-bin\nbinlog-ignore-db=\"mysql\"\n#master-host\n#master-user\n#master-password\n#master-connect-retry\n/" /etc/my.cnf
+	/bin/sed -i "s/\[mysqld\]/\[mysqld\]\nbind-address = 0.0.0.0\nserver-id = 1\nlog-bin = mysql-bin\nbinlog-ignore-db=\"mysql\"\n#master-host\n#master-user\n#master-password\n#master-connect-retry\nlog-slave-updates = 1/" /etc/my.cnf
 
 # MySQL : $MYSQL_PORT
 EXPOSE $MYSQL_PORT
