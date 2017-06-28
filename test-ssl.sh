@@ -14,7 +14,7 @@ while [ $AINDEX -le $NODES ]
     ((AINDEX++))
   done
 
-docker run -d --name mysql$INDEX -p $STARTPORT:3306 $IMAGENAME; 
+  docker run -d --name mysql$INDEX -v $(PWD)/ssl:/ssl -e MYSQL_SSL_CERT=server.pem -e MYSQL_SSL_KEY=server-key.pem -e MYSQL_SSL_PATH=/ssl -p $STARTPORT:3306 $IMAGENAME; 
 
 LOGA=$(docker logs mysql$INDEX |grep "Slave account password" | cut -d' ' -f 5)
 
@@ -33,7 +33,7 @@ while [ $AINDEX -lt $NODES ]
     ((AINDEX++))
     ((STARTPORT++))
 
-    docker run -d --name mysql${AINDEX} -p ${STARTPORT}:3306 -e MYSQL_ID=${AINDEX} -e MYSQL_MASTER_HOST="db${PREINDEX}" -e MYSQL_MASTER_PASS="${LOGA}" --link mysql${PREINDEX}:db${PREINDEX} ${IMAGENAME};
+    docker run -d --name mysql${AINDEX} -p ${STARTPORT}:3306 -v $(PWD)/ssl:/ssl -e MYSQL_SSL_CERT=server.pem -e MYSQL_SSL_KEY=server-key.pem -e MYSQL_SSL_PATH=/ssl -e MYSQL_ID=${AINDEX} -e MYSQL_MASTER_HOST="db${PREINDEX}" -e MYSQL_MASTER_PASS="${LOGA}" --link mysql${PREINDEX}:db${PREINDEX} ${IMAGENAME};
     
     LOG=$(docker logs mysql$AINDEX |grep "Slave account password" | cut -d' ' -f 5)
     

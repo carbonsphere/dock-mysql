@@ -36,14 +36,13 @@ if [ -d "${MYSQL_SSL_PATH}" ]; then
   sed -i "/ssl-key/c\ssl-key = ${MYSQL_SSL_PATH}/${MYSQL_SSL_KEY}" /etc/my.cnf
 fi
 
-
 service mysqld start
 sleep 5
 
 echo "Setting mysql slave account password"
 
 if [ -d "${MYSQL_SSL_PATH}" ]; then
-mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "grant replication slave on *.* TO ${MYSQL_SLAVE_USER}@'%' identified by '${MYSQL_SLAVE_PASS}' REQUIRE X509; GRANT USAGE ON *.* to '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASS}'; FLUSH PRIVILEGES;"
+mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "grant replication slave on *.* TO ${MYSQL_SLAVE_USER}@'%' identified by '${MYSQL_SLAVE_PASS}' REQUIRE SSL; GRANT USAGE ON *.* to '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASS}' REQUIRE SSL; FLUSH PRIVILEGES;STOP SLAVE;CHANGE MASTER TO MASTER_SSL=1,MASTER_SSL_CA='${MYSQL_SSL_PATH}/ca.pem',MASTER_SSL_CERT='${MYSQL_SSL_PATH}/client1/client1.pem',MASTER_SSL_KEY='${MYSQL_SSL_PATH}/client1/client1-key.pem';START SLAVE;"
 else 
 mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "grant replication slave on *.* TO ${MYSQL_SLAVE_USER}@'%' identified by '${MYSQL_SLAVE_PASS}'; GRANT USAGE ON *.* to '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASS}'; FLUSH PRIVILEGES;"
 fi
