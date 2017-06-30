@@ -42,7 +42,15 @@ sleep 5
 echo "Setting mysql slave account password"
 
 if [ -d "${MYSQL_SSL_PATH}" ]; then
-mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "grant replication slave on *.* TO ${MYSQL_SLAVE_USER}@'%' identified by '${MYSQL_SLAVE_PASS}' REQUIRE SSL; GRANT USAGE ON *.* to '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASS}' REQUIRE SSL; FLUSH PRIVILEGES;STOP SLAVE;CHANGE MASTER TO MASTER_SSL=1,MASTER_SSL_CA='${MYSQL_SSL_PATH}/ca.pem',MASTER_SSL_CERT='${MYSQL_SSL_PATH}/client1/client1.pem',MASTER_SSL_KEY='${MYSQL_SSL_PATH}/client1/client1-key.pem';START SLAVE;"
+echo "set privileges ${MYSQL_PASS}"
+mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "GRANT USAGE ON *.* to '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASS}';"
+  if [ "${MYSQL_ID}" != "1" ]; then
+echo "set replication for slave hosts"
+mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "grant replication slave on *.* TO '${MYSQL_SLAVE_USER}'@'%' identified by '${MYSQL_SLAVE_PASS}' REQUIRE SSL; STOP SLAVE;CHANGE MASTER TO MASTER_SSL=1,MASTER_SSL_CA='${MYSQL_SSL_PATH}/ca.pem',MASTER_SSL_CERT='${MYSQL_SSL_PATH}/client1/client1.pem',MASTER_SSL_KEY='${MYSQL_SSL_PATH}/client1/client1-key.pem';START SLAVE; FLUSH PRIVILEGES;"
+  else
+echo "set replication for master hosts"
+mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "grant replication slave on *.* TO '${MYSQL_SLAVE_USER}'@'%' identified by '${MYSQL_SLAVE_PASS}' REQUIRE SSL; CHANGE MASTER TO MASTER_SSL=1,MASTER_SSL_CA='${MYSQL_SSL_PATH}/ca.pem',MASTER_SSL_CERT='${MYSQL_SSL_PATH}/client1/client1.pem',MASTER_SSL_KEY='${MYSQL_SSL_PATH}/client1/client1-key.pem'; FLUSH PRIVILEGES;"
+  fi
 else 
 mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "grant replication slave on *.* TO ${MYSQL_SLAVE_USER}@'%' identified by '${MYSQL_SLAVE_PASS}'; GRANT USAGE ON *.* to '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASS}'; FLUSH PRIVILEGES;"
 fi

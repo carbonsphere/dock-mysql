@@ -98,3 +98,8 @@ while [ $AINDEX -le $NODES ]
     docker exec -it mysql${AINDEX} mysql -uroot -pcarbon -e "show databases;"
     ((AINDEX++)) 
   done
+
+echo "Reset All Container Passwords to first container's password"
+
+PASS=$(docker logs mysql$INDEX |grep "New Remote password" | cut -d' ' -f 5)
+docker exec -it mysql1 mysql -uroot -pcarbon -e "GRANT USAGE ON *.* to 'carbon'@'%' identified by '${PASS}';"
